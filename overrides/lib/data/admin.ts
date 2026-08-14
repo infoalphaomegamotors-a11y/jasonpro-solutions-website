@@ -5,6 +5,8 @@ export type AdminOperationsData = {
   products: Array<{ id:string; name:string; category:string; status:string; price_label:string|null }>;
   briefs: Array<{ id:string; full_name:string; email:string; service:string; status:string; created_at:string }>;
   tickets: Array<{ id:string; subject:string; status:string; priority:string; created_at:string }>;
+  profiles: Array<{ id:string; email:string|null; full_name:string|null; company_name:string|null; role:string; created_at:string }>;
+  projects: Array<{ id:string; client_id:string; name:string; status:string; summary:string|null; target_launch_date:string|null; created_at:string }>;
 };
 
 async function count(table: string, filters?: (q: any) => any) {
@@ -27,14 +29,18 @@ export async function getAdminSnapshot(): Promise<AdminSnapshot> {
 
 export async function getAdminOperationsData(): Promise<AdminOperationsData> {
   const supabase = await createServerSupabaseClient();
-  const [products, briefs, tickets] = await Promise.all([
+  const [products, briefs, tickets, profiles, projects] = await Promise.all([
     supabase.from("products").select("id,name,category,status,price_label").order("created_at", { ascending:false }).limit(50),
     supabase.from("project_briefs").select("id,full_name,email,service,status,created_at").order("created_at", { ascending:false }).limit(50),
     supabase.from("support_tickets").select("id,subject,status,priority,created_at").order("created_at", { ascending:false }).limit(50),
+    supabase.from("profiles").select("id,email,full_name,company_name,role,created_at").order("created_at", { ascending:false }).limit(100),
+    supabase.from("client_projects").select("id,client_id,name,status,summary,target_launch_date,created_at").order("created_at", { ascending:false }).limit(100),
   ]);
   return {
     products: (products.data ?? []) as AdminOperationsData["products"],
     briefs: (briefs.data ?? []) as AdminOperationsData["briefs"],
     tickets: (tickets.data ?? []) as AdminOperationsData["tickets"],
+    profiles: (profiles.data ?? []) as AdminOperationsData["profiles"],
+    projects: (projects.data ?? []) as AdminOperationsData["projects"],
   };
 }
