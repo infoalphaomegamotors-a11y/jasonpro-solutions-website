@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 const patches = [
   {
@@ -29,7 +30,6 @@ for (const patch of patches) {
   console.log(`Patched ${patch.file}`);
 }
 
-// Make auth callback failures explicit and keep users on the production site.
 {
   const file = 'app/auth/callback/route.ts';
   let source = fs.readFileSync(file, 'utf8');
@@ -44,9 +44,6 @@ for (const patch of patches) {
   console.log(`Patched ${file}`);
 }
 
-// Public Supabase credentials are intentionally browser-safe. Environment
-// variables remain preferred; these fallbacks prevent a build-time false
-// negative from disabling auth/forms on Netlify.
 fs.writeFileSync('lib/supabase/config.ts', `export const supabaseConfig = {
   url: process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://xrhkiuwbsotejsonuyxt.supabase.co",
   publishableKey:
@@ -60,3 +57,21 @@ export const isSupabaseConfigured = Boolean(
 );
 `);
 console.log('Injected production-safe Supabase public fallback configuration');
+
+function applyOverrides(dir, root = dir) {
+  if (!fs.existsSync(dir)) return;
+  for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+    const source = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      applyOverrides(source, root);
+      continue;
+    }
+    const relative = path.relative(root, source);
+    const target = path.join(process.cwd(), relative);
+    fs.mkdirSync(path.dirname(target), { recursive: true });
+    fs.copyFileSync(source, target);
+    console.log(`Applied override ${relative}`);
+  }
+}
+
+applyOverrides(path.join(process.cwd(), 'overrides'));
