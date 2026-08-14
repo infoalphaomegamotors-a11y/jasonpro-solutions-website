@@ -2,5 +2,5 @@
 
 Production source for JasonPro Solutions.
 
-Production rebuild trigger: 2026-08-14 22:16 CAT.
-Commercial content release: 10 dedicated service pages, FAQ, quote request, consultation request, upgraded Contact and expanded sitemap.
+Production rebuild trigger: 2026-08-15 00:20 CAT.
+Founder + graphic portfolio release: archive-sourced About page, founder portrait, curated graphic-design portfolio, service linking and sitemap integration. Birthdate intentionally excluded.
