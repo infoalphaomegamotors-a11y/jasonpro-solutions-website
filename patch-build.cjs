@@ -23,3 +23,20 @@ for (const patch of patches) {
   fs.writeFileSync(patch.file, source);
   console.log(`Patched ${patch.file}`);
 }
+
+// Public Supabase credentials are intentionally browser-safe. Environment
+// variables remain preferred; these fallbacks prevent a build-time false
+// negative from disabling auth/forms on Netlify.
+fs.writeFileSync('lib/supabase/config.ts', `export const supabaseConfig = {
+  url: process.env.NEXT_PUBLIC_SUPABASE_URL ?? "https://xrhkiuwbsotejsonuyxt.supabase.co",
+  publishableKey:
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ??
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ??
+    "sb_publishable_KRA4wLwK-huSKcDlTQutaw_vE-paY6b",
+};
+
+export const isSupabaseConfigured = Boolean(
+  supabaseConfig.url && supabaseConfig.publishableKey,
+);
+`);
+console.log('Injected production-safe Supabase public fallback configuration');
