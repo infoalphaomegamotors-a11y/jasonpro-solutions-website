@@ -1,0 +1,7 @@
+[build]
+  command = "rm -rf .deploy-src && mkdir .deploy-src && unzip -qo jasonpro-site-source-v16.zip -d .deploy-src && cp -a .deploy-src/jasonpro-v16/. . && npm install --no-audit --no-fund && npm run build"
+
+[build.environment]
+  NODE_VERSION = "22"
+
+# Next.js App Router/SSR is handled by Netlify's OpenNext runtime.
