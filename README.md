@@ -2,5 +2,5 @@
 
 Production source for JasonPro Solutions.
 
-Production rebuild trigger: 2026-08-14 21:08 CAT.
-Stage 18 users, projects and secure client files rollout.
+Production rebuild trigger: 2026-08-14 21:35 CAT.
+Stage 19 delivery workspace rollout: milestones, invoices and private client files.
