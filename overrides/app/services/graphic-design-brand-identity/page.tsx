@@ -32,7 +32,7 @@ export default function GraphicDesignBrandIdentityPage(){
     ]}
     proof={[
       {label:"MULTI-DISCIPLINARY BRAND",title:"JasonPro Solutions",copy:"JasonPro’s own visual language connects the website, interface system, commercial materials and broader service identity around one controlled brand system."},
-      {label:"PORTFOLIO",title:"Selected Work",copy:"The Work section is the primary place to evaluate the visual and systems thinking applied across verified JasonPro projects.",href:"/work"},
+      {label:"GRAPHIC DESIGN ARCHIVE",title:"Selected Graphic Design",copy:"A curated selection from JasonPro’s original graphic-design archive, including print, social campaigns, brand identity, product artwork and signage.",href:"/work/graphic-design-portfolio"},
     ]}
     fit={[
       "A new business that needs a complete identity rather than a standalone logo file.",
