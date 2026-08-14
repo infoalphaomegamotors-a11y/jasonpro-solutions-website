@@ -16,6 +16,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/services/vehicle-sourcing-sales",
     "/services/custom-clothing-printing",
     "/work",
+    "/work/graphic-design-portfolio",
     "/about",
     "/contact",
     "/quote",
@@ -29,6 +30,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${base}${path}`,
     lastModified: new Date(),
     changeFrequency: path === "/" ? "weekly" : "monthly",
-    priority: path === "/" ? 1 : path.startsWith("/services") || path === "/work" ? 0.9 : path === "/contact" || path === "/quote" || path === "/consultation" ? 0.8 : 0.7,
+    priority: path === "/" ? 1 : path.startsWith("/services") || path.startsWith("/work") ? 0.9 : path === "/contact" || path === "/quote" || path === "/consultation" ? 0.8 : 0.7,
   }));
 }
