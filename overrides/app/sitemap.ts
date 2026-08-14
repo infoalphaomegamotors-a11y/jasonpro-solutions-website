@@ -18,6 +18,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/work",
     "/about",
     "/contact",
+    "/quote",
+    "/consultation",
+    "/faq",
     "/shop",
     "/digital-products",
     "/premium",
@@ -26,6 +29,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     url: `${base}${path}`,
     lastModified: new Date(),
     changeFrequency: path === "/" ? "weekly" : "monthly",
-    priority: path === "/" ? 1 : path.startsWith("/services") || path === "/work" ? 0.9 : 0.7,
+    priority: path === "/" ? 1 : path.startsWith("/services") || path === "/work" ? 0.9 : path === "/contact" || path === "/quote" || path === "/consultation" ? 0.8 : 0.7,
   }));
 }
