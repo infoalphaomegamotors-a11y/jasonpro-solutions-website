@@ -75,3 +75,15 @@ function applyOverrides(dir, root = dir) {
 }
 
 applyOverrides(path.join(process.cwd(), 'overrides'));
+
+// Final production polish after overrides are applied.
+{
+  const file = 'components/admin/AdminDashboard.tsx';
+  if (fs.existsSync(file)) {
+    let source = fs.readFileSync(file, 'utf8');
+    source = source.replace(' · STAGE 19 • DELIVERY WORKSPACE', '');
+    source = source.replace(' · STAGE 18 • PROJECTS + USERS', '');
+    fs.writeFileSync(file, source);
+    console.log(`Polished ${file}`);
+  }
+}
