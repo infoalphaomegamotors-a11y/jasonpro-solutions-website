@@ -1,0 +1,9 @@
+create index if not exists audit_logs_actor_idx on public.audit_logs(actor_id);
+create index if not exists client_projects_brief_idx on public.client_projects(brief_id);
+create index if not exists invoices_project_idx on public.invoices(project_id);
+create index if not exists memberships_plan_idx on public.memberships(plan_id);
+create index if not exists order_items_product_idx on public.order_items(product_id);
+create index if not exists products_created_by_idx on public.products(created_by);
+create index if not exists project_briefs_user_idx on public.project_briefs(user_id);
+create index if not exists project_files_uploaded_by_idx on public.project_files(uploaded_by);
+create index if not exists support_tickets_project_idx on public.support_tickets(project_id);

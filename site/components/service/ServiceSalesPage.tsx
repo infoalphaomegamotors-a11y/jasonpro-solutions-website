@@ -1,0 +1,53 @@
+import Link from "next/link";
+import InteriorHeader from "@/components/InteriorHeader";
+
+type ServiceSalesPageProps = {
+  eyebrow: string;
+  title: string;
+  accent: string;
+  intro: string;
+  outcomes: Array<{title:string; copy:string}>;
+  capabilities: Array<{num:string; title:string; copy:string; meta:string}>;
+  process: Array<{num:string; title:string; copy:string}>;
+  proof?: Array<{label:string; title:string; copy:string; href?:string}>;
+  fit: string[];
+  ctaTitle: string;
+};
+
+export default function ServiceSalesPage({eyebrow,title,accent,intro,outcomes,capabilities,process,proof=[],fit,ctaTitle}:ServiceSalesPageProps){
+  return <main className="interior-page service-sales-page">
+    <InteriorHeader/>
+    <section className="service-sales-hero">
+      <div className="service-sales-kicker"><span>{eyebrow}</span><i/></div>
+      <h1>{title}<br/><em>{accent}</em></h1>
+      <div className="service-sales-intro"><p>{intro}</p><div><Link href="/contact">START A PROJECT →</Link><Link href="/work">VIEW SELECTED WORK</Link></div></div>
+    </section>
+
+    <section className="service-sales-outcomes">
+      <span className="section-label">WHAT THIS SHOULD CHANGE</span>
+      <div className="service-outcome-grid">{outcomes.map((item,index)=><article key={item.title}><small>{String(index+1).padStart(2,"0")}</small><h2>{item.title}</h2><p>{item.copy}</p></article>)}</div>
+    </section>
+
+    <section className="service-sales-capabilities">
+      <div className="service-section-head"><span>CAPABILITY SYSTEM</span><h2>Not a list of deliverables.<br/>A connected business solution.</h2></div>
+      <div className="service-capability-list">{capabilities.map(item=><article key={item.num}><span>{item.num}</span><div><h3>{item.title}</h3><p>{item.copy}</p><small>{item.meta}</small></div></article>)}</div>
+    </section>
+
+    <section className="service-sales-process">
+      <div className="service-section-head light"><span>HOW WE WORK</span><h2>Clarity before complexity.</h2></div>
+      <div className="service-process-grid">{process.map(item=><article key={item.num}><span>{item.num}</span><h3>{item.title}</h3><p>{item.copy}</p></article>)}</div>
+    </section>
+
+    {proof.length>0&&<section className="service-sales-proof"><div className="service-section-head"><span>RELEVANT WORK</span><h2>Proof through real systems and projects.</h2></div><div className="service-proof-grid">{proof.map(item=><article key={item.title}><small>{item.label}</small><h3>{item.title}</h3><p>{item.copy}</p>{item.href&&<Link href={item.href}>EXPLORE PROJECT →</Link>}</article>)}</div></section>}
+
+    <section className="service-sales-fit"><div><span>GOOD FIT</span><h2>This service is built for organisations that need more than a surface-level redesign.</h2></div><ul>{fit.map(item=><li key={item}>{item}</li>)}</ul></section>
+
+    <section className="service-sales-cta"><span>READY WHEN THE BUSINESS PROBLEM IS REAL.</span><h2>{ctaTitle}</h2><div><Link href="/contact">START A PROJECT →</Link><Link href="/services">EXPLORE ALL SERVICES</Link></div></section>
+
+    <style>{`
+      .service-sales-page{background:#f5f5f2}.service-sales-hero{min-height:720px;padding:12vh 5vw 8vh;background:#f8f8f5;display:flex;flex-direction:column;justify-content:center;border-bottom:1px solid #d6d6d1;overflow:hidden;position:relative}.service-sales-hero:after{content:"";position:absolute;width:38vw;aspect-ratio:1;border:1px solid #deded9;border-radius:50%;right:-10vw;top:9vh;box-shadow:0 0 0 8vw rgba(0,0,0,.018),0 0 0 16vw rgba(0,0,0,.01)}.service-sales-kicker{display:flex;align-items:center;gap:18px;position:relative;z-index:2}.service-sales-kicker span,.section-label,.service-section-head>span,.service-sales-fit>div>span,.service-sales-cta>span{font-size:9px;font-weight:800;letter-spacing:.2em;color:#d91f26}.service-sales-kicker i{width:80px;height:1px;background:#d91f26}.service-sales-hero h1{font-size:clamp(64px,8.6vw,145px);line-height:.82;letter-spacing:-.067em;margin:30px 0 40px;max-width:1280px;position:relative;z-index:2}.service-sales-hero h1 em{font-style:normal;color:#d91f26}.service-sales-intro{position:relative;z-index:2;display:grid;grid-template-columns:minmax(300px,650px) auto;align-items:end;gap:60px}.service-sales-intro p{font-size:18px;line-height:1.65;color:#464646;margin:0}.service-sales-intro>div,.service-sales-cta>div{display:flex;gap:10px;flex-wrap:wrap}.service-sales-intro a,.service-sales-cta a,.service-proof-grid a{display:inline-block;padding:14px 17px;background:#080808;color:#fff;font-size:9px;font-weight:700;letter-spacing:.1em}.service-sales-intro a+ a,.service-sales-cta a+ a{background:transparent;color:#111;border:1px solid #bbb}.service-sales-outcomes{padding:9vh 5vw 10vh}.service-outcome-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:#d4d4cf;margin-top:30px;border:1px solid #d4d4cf}.service-outcome-grid article{background:#f5f5f2;padding:40px;min-height:300px}.service-outcome-grid small{color:#d91f26;font-size:10px}.service-outcome-grid h2{font-size:clamp(28px,2.6vw,44px);line-height:.98;letter-spacing:-.045em;margin:40px 0 20px}.service-outcome-grid p,.service-capability-list p,.service-process-grid p,.service-proof-grid p,.service-sales-fit li{color:#5b5b5b;line-height:1.65;font-size:14px}.service-sales-capabilities{padding:10vh 5vw;background:#090909;color:#fff}.service-section-head{display:grid;grid-template-columns:190px 1fr;gap:50px;align-items:start;margin-bottom:60px}.service-section-head h2{font-size:clamp(40px,5.5vw,86px);line-height:.92;letter-spacing:-.055em;margin:0;max-width:1000px}.service-section-head.light h2{color:#111}.service-capability-list{border-top:1px solid #2a2a2a}.service-capability-list article{display:grid;grid-template-columns:80px 1fr;padding:38px 0;border-bottom:1px solid #252525}.service-capability-list article>span{color:#d91f26;font-size:12px}.service-capability-list h3{font-size:clamp(27px,3vw,48px);letter-spacing:-.04em;margin:0 0 10px}.service-capability-list p{color:#a4a4a4;max-width:780px;margin:0 0 15px}.service-capability-list small{color:#656565;font-size:9px;letter-spacing:.12em;text-transform:uppercase}.service-sales-process{padding:10vh 5vw;background:#eeeDEA;color:#111}.service-process-grid{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid #c8c8c2}.service-process-grid article{padding:32px 28px 32px 0;border-right:1px solid #c8c8c2;min-height:260px}.service-process-grid article+article{padding-left:28px}.service-process-grid span{font-size:11px;color:#d91f26}.service-process-grid h3{font-size:26px;letter-spacing:-.035em;margin:35px 0 14px}.service-sales-proof{padding:10vh 5vw;background:#fff}.service-proof-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}.service-proof-grid article{border:1px solid #d7d7d2;padding:42px;min-height:300px}.service-proof-grid small{font-size:9px;color:#d91f26;letter-spacing:.16em}.service-proof-grid h3{font-size:clamp(34px,4vw,60px);letter-spacing:-.05em;margin:28px 0 15px}.service-proof-grid a{margin-top:22px}.service-sales-fit{padding:10vh 5vw;background:#151515;color:#fff;display:grid;grid-template-columns:1fr 1fr;gap:7vw}.service-sales-fit h2{font-size:clamp(38px,5vw,72px);line-height:.95;letter-spacing:-.055em;margin:22px 0}.service-sales-fit ul{list-style:none;padding:0;margin:0}.service-sales-fit li{color:#b6b6b6;border-bottom:1px solid #303030;padding:18px 0 18px 25px;position:relative}.service-sales-fit li:before{content:"+";color:#d91f26;position:absolute;left:0}.service-sales-cta{padding:11vh 5vw;background:#df2027;color:#fff}.service-sales-cta>span{color:#fff}.service-sales-cta h2{font-size:clamp(48px,7vw,108px);line-height:.88;letter-spacing:-.06em;max-width:1100px;margin:25px 0 40px}.service-sales-cta a+ a{color:#fff;border-color:rgba(255,255,255,.5)}
+      @media(max-width:900px){.service-sales-intro,.service-section-head,.service-sales-fit{grid-template-columns:1fr}.service-outcome-grid{grid-template-columns:1fr}.service-process-grid{grid-template-columns:1fr 1fr}.service-process-grid article:nth-child(2){border-right:0}.service-proof-grid{grid-template-columns:1fr}.service-sales-hero{min-height:620px}.service-sales-intro{gap:30px}}
+      @media(max-width:620px){.service-sales-hero{min-height:560px;padding-top:9vh}.service-sales-hero h1{font-size:15vw;margin:24px 0 30px}.service-sales-intro p{font-size:14px}.service-sales-intro>div,.service-sales-cta>div{display:grid}.service-sales-intro a,.service-sales-cta a{text-align:center}.service-outcome-grid article{min-height:0;padding:30px 24px}.service-section-head{gap:22px}.service-capability-list article{grid-template-columns:44px 1fr}.service-process-grid{grid-template-columns:1fr}.service-process-grid article,.service-process-grid article+article{padding:28px 0;border-right:0}.service-proof-grid article{padding:30px 24px}.service-sales-fit{padding-top:8vh;padding-bottom:8vh}}
+    `}</style>
+  </main>;
+}

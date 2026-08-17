@@ -1,0 +1,5 @@
+import Image from "next/image";
+import Link from "next/link";
+import InteriorHeader from "@/components/InteriorHeader";
+import {caseStudies} from "@/lib/caseStudies";
+export default function WorkPage(){const items=Object.values(caseStudies);return <main className="interior-page"><InteriorHeader/><section className="interior-hero compact"><span>SELECTED WORK</span><h1>REAL PROJECTS.<br/><em>REAL THINKING.</em></h1><p>Evidence of how JasonPro combines design, systems and commercial intent.</p></section><section className="work-index">{items.map((p,i)=><Link href={`/work/${p.slug}`} key={p.slug} className={`work-index-item accent-${p.accent}`}><div className="work-index-num">0{i+1}</div><div className="work-index-image"><Image src={p.desktopImage} alt={p.imageAlt} fill sizes="(max-width:800px) 100vw, 55vw"/></div><div className="work-index-copy"><small>{p.type}</small><h2>{p.name}</h2><p>{p.intro}</p><span>VIEW CASE STUDY →</span></div></Link>)}</section><section className="interior-end"><small>NEXT PROJECT</small><h2>YOURS COULD BE HERE.</h2><Link href="/contact">START A PROJECT →</Link></section></main>}
