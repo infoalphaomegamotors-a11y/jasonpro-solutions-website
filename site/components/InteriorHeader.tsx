@@ -6,6 +6,7 @@ import { useState } from "react";
 const links = [
   ["Services", "/services"],
   ["Work", "/work"],
+  ["Graphic Portfolio", "/work/graphic-design-portfolio"],
   ["Shop", "/shop"],
   ["Premium", "/premium"],
   ["About", "/about"],
