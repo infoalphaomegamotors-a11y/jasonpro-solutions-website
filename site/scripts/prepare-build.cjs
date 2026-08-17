@@ -17,5 +17,7 @@ if (source.includes(oldBrandProject)) {
   source = source.replace(oldBrandProject, newBrandProject);
 }
 
+source = source.replace('{label}{label === "Solutions" && <sup>NEW</sup>}', '{label}');
+
 fs.writeFileSync(file, source);
 console.log('Prepared homepage navigation and graphic portfolio entry.');
