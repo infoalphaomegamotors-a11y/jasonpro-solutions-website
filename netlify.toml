@@ -1,5 +1,6 @@
 [build]
-  command = "rm -rf .deploy-src && mkdir .deploy-src && unzip -qo jasonpro-site-source-v16.zip -d .deploy-src && rm -f .deploy-src/jasonpro-v16/netlify.toml && cp -a .deploy-src/jasonpro-v16/. . && node patch-build.cjs && npm install --no-audit --no-fund && npm run build"
+  base = "site"
+  command = "npm install --no-audit --no-fund && npm run build"
 
 [build.environment]
   NODE_VERSION = "22"
@@ -13,7 +14,5 @@
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains"
 
-# Next.js App Router/SSR is handled by Netlify's OpenNext runtime.
-# The legacy netlify.toml inside the source ZIP is deliberately excluded during build
-# because its `publish = ".next"` setting causes Netlify to serve the Next build as a
-# static directory instead of using the Next.js runtime.
+# The production application is committed under /site so Netlify can detect
+# Next.js before the build lifecycle and provision the OpenNext runtime.
