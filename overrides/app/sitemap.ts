@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = "https://jasonprosolutions.netlify.app";
+  const base = "https://jasonpro-solutions-2026.netlify.app";
   const paths = [
     "/",
     "/services",
