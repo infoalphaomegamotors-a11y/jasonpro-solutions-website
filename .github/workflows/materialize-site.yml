@@ -1,0 +1,45 @@
+name: Materialize production site
+
+on:
+  push:
+    paths:
+      - '.github/workflows/materialize-site.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  materialize:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Build committed Next.js source tree
+        shell: bash
+        run: |
+          set -euo pipefail
+          rm -rf site .materialize-src
+          mkdir -p site .materialize-src
+          unzip -qo jasonpro-site-source-v16.zip -d .materialize-src
+          cp -a .materialize-src/jasonpro-v16/. site/
+          rm -f site/netlify.toml
+          cp -a overrides site/overrides
+          (cd site && node ../patch-build.cjs)
+          rm -rf site/overrides
+          rm -rf .materialize-src
+
+      - name: Commit materialized application
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add site
+          if git diff --cached --quiet; then
+            echo "No materialized source changes to commit."
+            exit 0
+          fi
+          git commit -m "Materialize Next.js app for Netlify OpenNext"
+          git push origin HEAD:main
