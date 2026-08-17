@@ -7,7 +7,7 @@ import { isSupabaseConfigured } from "@/lib/supabase/config";
 export type AuthState = { error?: string; success?: string };
 export type SignUpState = { error?: string; success?: string };
 
-const productionSiteUrl = "https://jasonprosolutions.netlify.app";
+const productionSiteUrl = "https://jasonpro-solutions-2026.netlify.app";
 function siteUrl() {
   return (process.env.NEXT_PUBLIC_SITE_URL || productionSiteUrl).replace(/\/$/, "");
 }
