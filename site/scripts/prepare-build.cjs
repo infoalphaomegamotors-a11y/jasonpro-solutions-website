@@ -22,25 +22,22 @@ source = source.replace('{label}{label === "Solutions" && <sup>NEW</sup>}', '{la
 fs.writeFileSync(file, source);
 console.log('Prepared homepage navigation and graphic portfolio entry.');
 
-// Decode the curated portfolio grid from the legacy data-URI module into a normal
-// public WebP asset. Browsers and CDNs handle this far more reliably than a large
-// inline data URL embedded in the rendered HTML.
-const assetModule = 'lib/assets/graphicPortfolioGrid.ts';
-const assetSource = fs.readFileSync(assetModule, 'utf8');
-const match = assetSource.match(/data:image\/webp;base64,([A-Za-z0-9+/=]+)/);
-if (!match) {
-  console.error('Could not extract graphic portfolio WebP payload.');
+// Decode the freshly rebuilt portfolio grid into a normal public WebP asset.
+const rebuiltAsset = 'lib/assets/graphicPortfolioGridFixed.part0.txt';
+const rebuiltBase64 = fs.readFileSync(rebuiltAsset, 'utf8').trim();
+if (!rebuiltBase64 || !rebuiltBase64.startsWith('UklGR')) {
+  console.error('Rebuilt graphic portfolio payload is missing or invalid.');
   process.exit(1);
 }
 const publicDir = path.join('public', 'portfolio');
 fs.mkdirSync(publicDir, { recursive: true });
 const portfolioAssetPath = path.join(publicDir, 'graphic-design-portfolio.webp');
-fs.writeFileSync(portfolioAssetPath, Buffer.from(match[1], 'base64'));
-console.log(`Wrote ${portfolioAssetPath}`);
+fs.writeFileSync(portfolioAssetPath, Buffer.from(rebuiltBase64, 'base64'));
+console.log(`Wrote rebuilt ${portfolioAssetPath}`);
 
 const portfolioPage = 'app/work/graphic-design-portfolio/page.tsx';
 let portfolioSource = fs.readFileSync(portfolioPage, 'utf8');
 portfolioSource = portfolioSource.replace('import { graphicPortfolioGrid } from "@/lib/assets/graphicPortfolioGrid";\n', '');
 portfolioSource = portfolioSource.replace('src={graphicPortfolioGrid}', 'src="/portfolio/graphic-design-portfolio.webp"');
 fs.writeFileSync(portfolioPage, portfolioSource);
-console.log('Updated graphic design portfolio page to use a public WebP asset.');
+console.log('Updated graphic design portfolio page to use the rebuilt public WebP asset.');
