@@ -1,9 +1,13 @@
 [build]
   base = "site"
-  command = "npm install --no-audit --no-fund && npm run build"
+  command = "npm run build"
+  publish = ".next"
 
 [build.environment]
   NODE_VERSION = "22"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 [[headers]]
   for = "/*"
@@ -13,6 +17,3 @@
     Referrer-Policy = "strict-origin-when-cross-origin"
     Permissions-Policy = "camera=(), microphone=(), geolocation=()"
     Strict-Transport-Security = "max-age=31536000; includeSubDomains"
-
-# The production application is committed under /site so Netlify can detect
-# Next.js before the build lifecycle and provision the OpenNext runtime.
