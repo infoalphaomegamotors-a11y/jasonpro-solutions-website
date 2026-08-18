@@ -1,5 +1,4 @@
 const fs = require('fs');
-const path = require('path');
 
 const file = 'components/HomeExperience.tsx';
 let source = fs.readFileSync(file, 'utf8');
@@ -21,23 +20,3 @@ if (source.includes(oldBrandProject)) {
 source = source.replace('{label}{label === "Solutions" && <sup>NEW</sup>}', '{label}');
 fs.writeFileSync(file, source);
 console.log('Prepared homepage navigation and graphic portfolio entry.');
-
-// Decode the freshly rebuilt portfolio grid into a normal public WebP asset.
-const rebuiltAsset = 'lib/assets/graphicPortfolioGridFixed.part0.txt';
-const rebuiltBase64 = fs.readFileSync(rebuiltAsset, 'utf8').trim();
-if (!rebuiltBase64 || !rebuiltBase64.startsWith('UklGR')) {
-  console.error('Rebuilt graphic portfolio payload is missing or invalid.');
-  process.exit(1);
-}
-const publicDir = path.join('public', 'portfolio');
-fs.mkdirSync(publicDir, { recursive: true });
-const portfolioAssetPath = path.join(publicDir, 'graphic-design-portfolio.webp');
-fs.writeFileSync(portfolioAssetPath, Buffer.from(rebuiltBase64, 'base64'));
-console.log(`Wrote rebuilt ${portfolioAssetPath}`);
-
-const portfolioPage = 'app/work/graphic-design-portfolio/page.tsx';
-let portfolioSource = fs.readFileSync(portfolioPage, 'utf8');
-portfolioSource = portfolioSource.replace('import { graphicPortfolioGrid } from "@/lib/assets/graphicPortfolioGrid";\n', '');
-portfolioSource = portfolioSource.replace('src={graphicPortfolioGrid}', 'src="/portfolio/graphic-design-portfolio.webp"');
-fs.writeFileSync(portfolioPage, portfolioSource);
-console.log('Updated graphic design portfolio page to use the rebuilt public WebP asset.');
