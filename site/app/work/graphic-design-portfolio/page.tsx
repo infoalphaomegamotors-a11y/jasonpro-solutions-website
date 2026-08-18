@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import InteriorHeader from "@/components/InteriorHeader";
-import { graphicPortfolioGrid } from "@/lib/assets/graphicPortfolioGrid";
 
 export const metadata: Metadata = {
   title: "Graphic Design Portfolio | JasonPro Solutions",
@@ -27,7 +26,7 @@ export default function GraphicDesignPortfolioPage(){
 
     <section className="gd-board">
       <div className="gd-board-head"><span>CURATED ARCHIVE</span><p>16 representative pieces selected from a substantially larger source portfolio.</p></div>
-      <img src={graphicPortfolioGrid} alt="Curated JasonPro graphic design archive showing print design, social media campaign graphics, brand identity, product artwork and signage"/>
+      <img src="/portfolio/graphic-design-portfolio.webp" alt="Curated JasonPro graphic design archive showing print design, social media campaign graphics, brand identity, product artwork and signage"/>
     </section>
 
     <section className="gd-categories">
