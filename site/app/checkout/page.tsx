@@ -1,3 +1,7 @@
-import CommerceHeader from "../../components/CommerceHeader";
-import { CheckoutExperience } from "../../components/CommerceClient";
-export default function CheckoutPage(){return <main className="commerce-page"><CommerceHeader/><CheckoutExperience/></main>}
+import { redirect } from "next/navigation";
+
+export const metadata = { robots: { index: false, follow: false } };
+
+export default function CheckoutPage(){
+  redirect("/shop");
+}
