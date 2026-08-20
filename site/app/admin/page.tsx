@@ -16,6 +16,7 @@ const unconfiguredOperations: AdminOperationsData = {
   milestones: [],
   invoices: [],
   files: [],
+  portfolio: [],
 };
 
 export default async function AdminPage() {
