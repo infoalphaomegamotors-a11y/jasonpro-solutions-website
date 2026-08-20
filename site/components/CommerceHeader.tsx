@@ -1,6 +1,5 @@
 import Image from "next/image";
 import Link from "next/link";
-import { CartCount } from "./CommerceClient";
 
 export default function CommerceHeader(){
   return <header className="commerce-header">
@@ -14,7 +13,6 @@ export default function CommerceHeader(){
     </nav>
     <div>
       <Link href="/auth/sign-in">Client Login</Link>
-      <Link href="/cart" className="cart-link">Cart <CartCount/></Link>
       <Link href="/contact">Start a Project</Link>
     </div>
   </header>;
