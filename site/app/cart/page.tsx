@@ -1,3 +1,7 @@
-import CommerceHeader from "../../components/CommerceHeader";
-import { CartExperience } from "../../components/CommerceClient";
-export default function CartPage(){return <main className="commerce-page"><CommerceHeader/><section className="simple-commerce-head"><span>YOUR CART</span><h1>Review before you continue.</h1></section><CartExperience/></main>}
+import { redirect } from "next/navigation";
+
+export const metadata = { robots: { index: false, follow: false } };
+
+export default function CartPage(){
+  redirect("/shop");
+}
