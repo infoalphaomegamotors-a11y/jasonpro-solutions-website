@@ -11,10 +11,7 @@ export const metadata: Metadata = {
 };
 
 const fallbackItems: PortfolioItem[] = [
-  { id:"fallback-print", title:"Print & Promotional Selection", category:"Print & Promotional", caption:"Representative print and promotional work from the JasonPro archive.", alt_text:"JasonPro print and promotional design selection", image_url:"/portfolio/items/print-collage.jpg", position:10 },
-  { id:"fallback-social", title:"Social Campaign Selection", category:"Social Campaigns", caption:"Representative social-media campaign artwork from the JasonPro archive.", alt_text:"JasonPro social media campaign design selection", image_url:"/portfolio/items/social-collage.jpg", position:20 },
-  { id:"fallback-brand", title:"Brand Identity Selection", category:"Brand Identity", caption:"Representative brand and identity work from the JasonPro archive.", alt_text:"JasonPro brand identity design selection", image_url:"/portfolio/items/brand-collage.jpg", position:30 },
-  { id:"fallback-production", title:"Product & Production Selection", category:"Product & Production", caption:"Representative product artwork, signage and production work from the JasonPro archive.", alt_text:"JasonPro product artwork and production design selection", image_url:"/portfolio/items/production-collage.jpg", position:40 },
+  { id:"fallback-archive", title:"JasonPro Graphic Design Archive", category:"Selected Archive", caption:"Representative real graphic-design work from the supplied JasonPro archive.", alt_text:"JasonPro graphic design portfolio archive", image_url:"/portfolio/graphic-design-portfolio.webp", position:10 },
 ];
 
 async function getPortfolioItems(): Promise<PortfolioItem[]> {
@@ -28,7 +25,10 @@ async function getPortfolioItems(): Promise<PortfolioItem[]> {
       .order("position", { ascending: true })
       .order("created_at", { ascending: false });
     if (error || !data?.length) return fallbackItems;
-    return data as PortfolioItem[];
+    return data.map(item => ({
+      ...item,
+      image_url: `/work/graphic-design-portfolio/image/${item.id}`,
+    })) as PortfolioItem[];
   } catch {
     return fallbackItems;
   }
