@@ -17,6 +17,12 @@ source = source.replace(placeholderDigitalProduct, '');
 source = source.replace('{label}{label === "Solutions" && <sup>NEW</sup>}', '{label}');
 source = source.replace(/\/ 05/g, '/ 04');
 source = source.replace(/05 \/ 05/g, '04 / 04');
-
 fs.writeFileSync(file, source);
 console.log('Prepared production homepage navigation and selected work.');
+
+const adminFile = 'components/admin/AdminDashboard.tsx';
+let adminSource = fs.readFileSync(adminFile, 'utf8');
+adminSource = adminSource.replace('<input type="hidden" name="client_id" value={selectedProject.client_id}/>', '');
+adminSource = adminSource.replace('<label>File<input type="file" name="file" required/></label>', '<label>File<input type="file" name="file" accept=".pdf,.png,.jpg,.jpeg,.webp,.zip,.txt,.doc,.docx,.xls,.xlsx" required/></label>');
+fs.writeFileSync(adminFile, adminSource);
+console.log('Prepared hardened admin invoice and upload controls.');
