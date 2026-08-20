@@ -44,6 +44,14 @@ export async function getAdminOperationsData(): Promise<AdminOperationsData> {
     supabase.from("project_files").select("id,project_id,file_name,visibility,byte_size,created_at").order("created_at", { ascending:false }).limit(200),
     supabase.from("portfolio_items").select("id,title,category,caption,alt_text,image_url,storage_path,status,position,created_at").order("position", { ascending:true }).order("created_at", { ascending:false }).limit(200),
   ]);
+  const portfolioItems = ((portfolio.data ?? []) as AdminOperationsData["portfolio"]).map(item => ({
+    ...item,
+    image_url: item.status === "published"
+      ? `/work/graphic-design-portfolio/image/${item.id}`
+      : item.image_url.startsWith("data:")
+        ? ""
+        : item.image_url,
+  }));
   return {
     products: (products.data ?? []) as AdminOperationsData["products"],
     briefs: (briefs.data ?? []) as AdminOperationsData["briefs"],
@@ -53,6 +61,6 @@ export async function getAdminOperationsData(): Promise<AdminOperationsData> {
     milestones: (milestones.data ?? []) as AdminOperationsData["milestones"],
     invoices: (invoices.data ?? []) as AdminOperationsData["invoices"],
     files: (files.data ?? []) as AdminOperationsData["files"],
-    portfolio: (portfolio.data ?? []) as AdminOperationsData["portfolio"],
+    portfolio: portfolioItems,
   };
 }
