@@ -3,7 +3,7 @@ export type CaseStudy = {
   slug: string;
   name: string;
   type: string;
-  liveUrl: string;
+  liveUrl?: string;
   desktopImage: string;
   mobileImage?: string;
   imageAlt: string;
@@ -18,6 +18,11 @@ export type CaseStudy = {
   interfaceNotes: string[];
   focus: string;
   approach: string;
+  audience: string;
+  scope: string[];
+  constraints: string[];
+  deliveryEvidence: string[];
+  verification: string;
 };
 
 export const caseStudies: Record<string, CaseStudy> = {
@@ -45,12 +50,17 @@ export const caseStudies: Record<string, CaseStudy> = {
     ],
     interfaceNotes: [
       "Large editorial hero copy creates a strong first-read hierarchy.",
-      "The product mockup visualises qualification matching and application readiness.",
+      "The product interface visualises qualification matching and application readiness.",
       "Blue, white and dark navy create a professional employment-tech identity.",
-      "Mobile loading treatment keeps the ApplyBW brand visible during system preparation.",
+      "Mobile treatment keeps the ApplyBW brand visible while the workspace prepares.",
     ],
     focus: "Product strategy + UX/UI + web platform",
     approach: "Qualification matching, application workflow, responsive experience",
+    audience: "Botswana job seekers who need clearer opportunity discovery and a more structured way to prepare and track applications.",
+    scope: ["Product positioning and customer journey", "Responsive UX/UI direction", "Qualification-matching and application-readiness presentation", "Career workflow and dashboard experience"],
+    constraints: ["Explain several product capabilities without making the first visit feel administrative", "Maintain clarity across desktop and mobile", "Build trust without relying on fabricated placement or employment statistics"],
+    deliveryEvidence: ["Live product interface", "Desktop application experience", "Mobile workspace treatment", "Documented matching and application workflow"],
+    verification: "This case study shows the live product and documented design decisions. It does not claim job-placement, conversion or revenue metrics that have not been independently measured and supplied.",
   },
   "kwa-masdu-furniture": {
     id: "02",
@@ -82,13 +92,17 @@ export const caseStudies: Record<string, CaseStudy> = {
     ],
     focus: "Commerce UX + responsive web design",
     approach: "Editorial merchandising, catalogue hierarchy, mobile-first product discovery",
+    audience: "Furniture shoppers comparing available pieces and exploring custom-order possibilities across desktop and mobile.",
+    scope: ["Commerce information hierarchy", "Category and product-discovery experience", "Responsive storefront design", "Editorial merchandising treatment"],
+    constraints: ["Keep practical catalogue navigation visible while increasing visual impact", "Give product imagery enough space without hiding commerce actions", "Recompose the mobile experience instead of simply compressing desktop"],
+    deliveryEvidence: ["Live storefront", "Desktop catalogue interface", "Mobile product presentation", "Category and product-card hierarchy"],
+    verification: "The case study documents observable interface and merchandising decisions. No sales uplift, conversion-rate improvement or order-volume claim is published without verified source data.",
   },
   "alpha-omega-motors": {
     id: "03",
     slug: "alpha-omega-motors",
     name: "ALPHA OMEGA MOTORS",
     type: "Automotive Sales Platform",
-    liveUrl: "https://alphaomegamotors.netlify.app/",
     desktopImage: "/projects/alpha-omega/desktop.png",
     imageAlt: "Alpha Omega Motors desktop homepage promoting imported vehicles and vehicle search",
     accent: "red",
@@ -96,7 +110,7 @@ export const caseStudies: Record<string, CaseStudy> = {
     challengeTitle: "BUILD TRUST BEFORE ASKING FOR THE ENQUIRY.",
     challenge: "Vehicle purchasing is high-consideration. The landing experience therefore needs to communicate the offer immediately, explain the sourcing proposition and make stock discovery feel straightforward before asking the visitor to contact the business.",
     responseTitle: "LEAD WITH THE OFFER, THEN REMOVE SEARCH FRICTION.",
-    response: "The page combines an assertive headline with a dedicated vehicle-search module in the first viewport. The dark automotive presentation keeps the experience focused while red actions create a strong conversion path toward stock search and WhatsApp contact.",
+    response: "The page combines an assertive headline with a dedicated vehicle-search module in the first viewport. The dark automotive presentation keeps the experience focused while red actions create a strong conversion path toward stock search and direct contact.",
     principles: [
       "State the vehicle proposition immediately.",
       "Keep search and enquiry actions in the first viewport.",
@@ -107,9 +121,14 @@ export const caseStudies: Record<string, CaseStudy> = {
       "Large headline establishes the imported-vehicle proposition at first glance.",
       "Search module separates query and make selection into a simple sequence.",
       "Black, white and red create a direct, performance-oriented sales language.",
-      "WhatsApp remains prominent as a low-friction contact route.",
+      "Direct contact remains prominent as a low-friction enquiry route.",
     ],
     focus: "Landing-page UX + trust-driven sales design",
     approach: "Vehicle search, conversion hierarchy, strong regional positioning",
+    audience: "Prospective vehicle buyers who need to understand the imported-stock proposition, browse efficiently and reach the seller with confidence.",
+    scope: ["Automotive landing-page strategy", "Vehicle discovery and search presentation", "Trust-led conversion hierarchy", "Direct-enquiry experience"],
+    constraints: ["Communicate a high-consideration purchase proposition quickly", "Keep stock discovery prominent", "Avoid publishing unverified inventory, pricing or project-performance claims"],
+    deliveryEvidence: ["Production interface screenshot", "Vehicle-search presentation", "Conversion-focused first viewport", "Regional positioning and enquiry hierarchy"],
+    verification: "The interface evidence is shown directly. The external project URL is intentionally not published here until it is confirmed, and no vehicle-sales performance metrics are claimed without verified data.",
   },
 };
