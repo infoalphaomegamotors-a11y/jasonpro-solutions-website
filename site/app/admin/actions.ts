@@ -12,6 +12,20 @@ const milestoneStatuses = new Set(["upcoming","active","review","approved","comp
 const invoiceStatuses = new Set(["draft","issued","part_paid","paid","overdue","cancelled","refunded"]);
 const appRoles = new Set(["customer","member","client","content_manager","admin"]);
 
+const allowedFileTypes: Record<string, Set<string>> = {
+  "application/pdf": new Set(["pdf"]),
+  "image/png": new Set(["png"]),
+  "image/jpeg": new Set(["jpg","jpeg"]),
+  "image/webp": new Set(["webp"]),
+  "application/zip": new Set(["zip"]),
+  "application/x-zip-compressed": new Set(["zip"]),
+  "text/plain": new Set(["txt"]),
+  "application/msword": new Set(["doc"]),
+  "application/vnd.openxmlformats-officedocument.wordprocessingml.document": new Set(["docx"]),
+  "application/vnd.ms-excel": new Set(["xls"]),
+  "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": new Set(["xlsx"]),
+};
+
 async function adminClient(roles: Array<"admin"|"content_manager"> = ["admin","content_manager"]) {
   const profile = await requireRole(roles, "/admin");
   if (!profile) throw new Error("Admin access required");
@@ -39,21 +53,57 @@ export async function updateMilestoneStatus(formData: FormData) {
   const {error}=await supabase.from("project_milestones").update(patch).eq("id",id); if(error)throw new Error("Could not update milestone"); await audit(supabase,profile.id,"milestone.status.updated","project_milestone",id,{status}); revalidatePath("/admin"); revalidatePath("/portal");
 }
 export async function createInvoice(formData: FormData) {
-  const clientId=String(formData.get("client_id")||""); const projectId=String(formData.get("project_id")||""); const invoiceNumber=String(formData.get("invoice_number")||"").trim().slice(0,80); const total=Number(formData.get("total_amount")||0); const dueAt=String(formData.get("due_at")||"");
-  if(!clientId||!invoiceNumber||!Number.isFinite(total)||total<0)return; const {profile,supabase}=await adminClient();
+  const submittedClientId=String(formData.get("client_id")||"");
+  const projectId=String(formData.get("project_id")||"");
+  const invoiceNumber=String(formData.get("invoice_number")||"").trim().slice(0,80);
+  const total=Number(formData.get("total_amount")||0);
+  const dueAt=String(formData.get("due_at")||"");
+  if(!invoiceNumber||!Number.isFinite(total)||total<0)return;
+  const {profile,supabase}=await adminClient();
+
+  let clientId=submittedClientId;
+  if(projectId){
+    const {data:project,error:projectError}=await supabase.from("client_projects").select("id,client_id").eq("id",projectId).single();
+    if(projectError||!project?.client_id)throw new Error("Could not verify invoice project");
+    clientId=String(project.client_id);
+  } else {
+    if(!clientId)throw new Error("Invoice client is required");
+    const {data:client,error:clientError}=await supabase.from("profiles").select("id").eq("id",clientId).single();
+    if(clientError||!client)throw new Error("Could not verify invoice client");
+  }
+
   const {data,error}=await supabase.from("invoices").insert({client_id:clientId,project_id:projectId||null,invoice_number:invoiceNumber,status:"draft",subtotal:total,tax_amount:0,total_amount:total,due_at:dueAt||null}).select("id").single();
-  if(error||!data)throw new Error("Could not create invoice"); await audit(supabase,profile.id,"invoice.created","invoice",data.id,{invoice_number:invoiceNumber,total_amount:total}); revalidatePath("/admin"); revalidatePath("/portal");
+  if(error||!data)throw new Error("Could not create invoice");
+  await audit(supabase,profile.id,"invoice.created","invoice",data.id,{invoice_number:invoiceNumber,total_amount:total,project_id:projectId||null,client_id:clientId});
+  revalidatePath("/admin"); revalidatePath("/portal");
 }
 export async function updateInvoiceStatus(formData: FormData) {
   const id=String(formData.get("id")||""); const status=String(formData.get("status")||""); if(!id||!invoiceStatuses.has(status))return; const {profile,supabase}=await adminClient(); const patch:any={status}; if(status==="issued")patch.issued_at=new Date().toISOString(); if(status==="paid")patch.paid_at=new Date().toISOString();
   const {error}=await supabase.from("invoices").update(patch).eq("id",id); if(error)throw new Error("Could not update invoice"); await audit(supabase,profile.id,"invoice.status.updated","invoice",id,{status}); revalidatePath("/admin"); revalidatePath("/portal");
 }
 export async function publishProjectFile(formData: FormData) {
-  const projectId=String(formData.get("project_id")||""); const visibility=String(formData.get("visibility")||"client"); const file=formData.get("file");
-  if(!projectId||!(file instanceof File)||file.size===0||file.size>20*1024*1024)return; const {profile,supabase}=await adminClient();
-  const safeName=file.name.replace(/[^a-zA-Z0-9._-]/g,"_"); const storagePath=`${projectId}/${Date.now()}-${safeName}`;
-  const {error:uploadError}=await supabase.storage.from("project-files").upload(storagePath,file,{contentType:file.type||"application/octet-stream",upsert:false}); if(uploadError)throw new Error("Could not upload project file");
-  const {data,error}=await supabase.from("project_files").insert({project_id:projectId,uploaded_by:profile.id,storage_path:storagePath,file_name:file.name,mime_type:file.type||null,byte_size:file.size,visibility:visibility==="internal"?"internal":"client"}).select("id").single();
+  const projectId=String(formData.get("project_id")||"");
+  const visibility=String(formData.get("visibility")||"client");
+  const file=formData.get("file");
+  if(!projectId||!(file instanceof File)||file.size===0||file.size>20*1024*1024)throw new Error("Select a valid file up to 20 MB");
+
+  const rawType=(file.type||"").toLowerCase().trim();
+  const extension=file.name.includes(".")?file.name.split(".").pop()!.toLowerCase():"";
+  const allowedExtensions=allowedFileTypes[rawType];
+  if(!allowedExtensions||!allowedExtensions.has(extension))throw new Error("This file type is not allowed or its extension does not match its declared type");
+  if(/[\u0000-\u001f\u007f]/.test(file.name))throw new Error("Invalid file name");
+
+  const {profile,supabase}=await adminClient();
+  const {data:project,error:projectError}=await supabase.from("client_projects").select("id").eq("id",projectId).single();
+  if(projectError||!project)throw new Error("Could not verify project before upload");
+
+  const safeStem=file.name.replace(/\.[^.]+$/,"").replace(/[^a-zA-Z0-9_-]/g,"_").replace(/_+/g,"_").slice(0,120)||"file";
+  const safeName=`${safeStem}.${extension}`;
+  const storagePath=`${projectId}/${Date.now()}-${safeName}`;
+  const {error:uploadError}=await supabase.storage.from("project-files").upload(storagePath,file,{contentType:rawType,upsert:false});
+  if(uploadError)throw new Error("Could not upload project file");
+  const {data,error}=await supabase.from("project_files").insert({project_id:projectId,uploaded_by:profile.id,storage_path:storagePath,file_name:file.name,mime_type:rawType,byte_size:file.size,visibility:visibility==="internal"?"internal":"client"}).select("id").single();
   if(error||!data){await supabase.storage.from("project-files").remove([storagePath]); throw new Error("Could not publish project file");}
-  await audit(supabase,profile.id,"project_file.published","project_file",data.id,{project_id:projectId,file_name:file.name,visibility}); revalidatePath("/admin"); revalidatePath("/portal");
+  await audit(supabase,profile.id,"project_file.published","project_file",data.id,{project_id:projectId,file_name:file.name,mime_type:rawType,byte_size:file.size,visibility:visibility==="internal"?"internal":"client"});
+  revalidatePath("/admin"); revalidatePath("/portal");
 }
