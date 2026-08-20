@@ -10,6 +10,7 @@ export type AdminOperationsData = {
   milestones: Array<{ id:string; project_id:string; title:string; status:string; due_at:string|null; created_at:string }>;
   invoices: Array<{ id:string; project_id:string|null; client_id:string; invoice_number:string; status:string; currency:string; total_amount:number; due_at:string|null; created_at:string }>;
   files: Array<{ id:string; project_id:string; file_name:string; visibility:string; byte_size:number|null; created_at:string }>;
+  portfolio: Array<{ id:string; title:string; category:string; caption:string|null; alt_text:string; image_url:string; storage_path:string|null; status:string; position:number; created_at:string }>;
 };
 
 async function count(table: string, filters?: (q: any) => any) {
@@ -32,7 +33,7 @@ export async function getAdminSnapshot(): Promise<AdminSnapshot> {
 
 export async function getAdminOperationsData(): Promise<AdminOperationsData> {
   const supabase = await createServerSupabaseClient();
-  const [products, briefs, tickets, profiles, projects, milestones, invoices, files] = await Promise.all([
+  const [products, briefs, tickets, profiles, projects, milestones, invoices, files, portfolio] = await Promise.all([
     supabase.from("products").select("id,name,category,status,price_label").order("created_at", { ascending:false }).limit(50),
     supabase.from("project_briefs").select("id,full_name,email,service,status,created_at").order("created_at", { ascending:false }).limit(50),
     supabase.from("support_tickets").select("id,subject,status,priority,created_at").order("created_at", { ascending:false }).limit(50),
@@ -41,6 +42,7 @@ export async function getAdminOperationsData(): Promise<AdminOperationsData> {
     supabase.from("project_milestones").select("id,project_id,title,status,due_at,created_at").order("created_at", { ascending:false }).limit(200),
     supabase.from("invoices").select("id,project_id,client_id,invoice_number,status,currency,total_amount,due_at,created_at").order("created_at", { ascending:false }).limit(200),
     supabase.from("project_files").select("id,project_id,file_name,visibility,byte_size,created_at").order("created_at", { ascending:false }).limit(200),
+    supabase.from("portfolio_items").select("id,title,category,caption,alt_text,image_url,storage_path,status,position,created_at").order("position", { ascending:true }).order("created_at", { ascending:false }).limit(200),
   ]);
   return {
     products: (products.data ?? []) as AdminOperationsData["products"],
@@ -51,5 +53,6 @@ export async function getAdminOperationsData(): Promise<AdminOperationsData> {
     milestones: (milestones.data ?? []) as AdminOperationsData["milestones"],
     invoices: (invoices.data ?? []) as AdminOperationsData["invoices"],
     files: (files.data ?? []) as AdminOperationsData["files"],
+    portfolio: (portfolio.data ?? []) as AdminOperationsData["portfolio"],
   };
 }
