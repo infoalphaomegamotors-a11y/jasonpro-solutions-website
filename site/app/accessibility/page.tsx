@@ -1,0 +1,12 @@
+import type { Metadata } from "next";
+import PolicyPage from "@/components/PolicyPage";
+
+export const metadata: Metadata = { title: "Accessibility Statement", description: "JasonPro Solutions accessibility approach and how to report barriers on the website." };
+
+export default function AccessibilityPage(){return <PolicyPage title="Accessibility Statement" updated="20 August 2026" summary="JasonPro Solutions aims to make its public website and client-facing digital experiences usable by people with different devices, abilities and access needs." sections={[
+  {title:"Our approach",paragraphs:["Accessibility is treated as a design and engineering quality requirement rather than a separate visual theme. The website is intended to support keyboard navigation, meaningful document structure, readable contrast, responsive layouts and reduced-motion preferences where motion is used."]},
+  {title:"Current controls",bullets:["Semantic headings and landmarks are used across core pages.","Interactive controls should be operable by keyboard and expose meaningful labels.","Images that communicate content should include alternative text.","Motion-heavy experiences should respect the user’s reduced-motion preference.","Pages are designed to reflow across common desktop and mobile widths rather than requiring a fixed viewport."]},
+  {title:"Known improvement process",paragraphs:["The site continues to evolve, and accessibility defects may still be discovered as new pages and interactions are introduced. Issues are prioritised by whether they block access to information, navigation, forms or client tasks."],bullets:["Critical blockers should be corrected before cosmetic differences.","Repeated accessibility defects should be fixed in shared components to reduce variation across pages.","New customer journeys should be checked at keyboard and mobile widths before being treated as complete."]},
+  {title:"Third-party content",paragraphs:["Some links or embedded services may be operated by third parties. JasonPro cannot directly control every third-party interface but will avoid unnecessary dependence on inaccessible external components where practical."]},
+  {title:"Report a barrier",paragraphs:["If you cannot access information or complete a task on the site, contact Marupingjason@gmail.com or +267 76534997 and describe the page, device or assistive technology involved and what prevented completion. JasonPro will use that information to investigate the barrier and provide a reasonable alternative where possible."]},
+]}/>}
